@@ -1,0 +1,52 @@
+
+## ARM Instruction Simulator           ##
+##         Copyright (C) 2005 by NAIST ##
+##         Primary writer: Y.Nakashima ##
+##                nakashim@is.naist.jp ##
+
+OPTION	      = -DCHECK_CACHE -DIGNORE_LMMI_BLKGATHER -DIGNORE_LDDMQ_HANDSHAKE
+PROGRAM       = csim-fugaku
+CC            = gcc
+#CFLAGS       = -O3 -I. -I/usr/local/include $(OPTION)
+CFLAGS        = -O3 -I. -I/usr/local/include $(OPTION)
+ASFLAGS       = 
+#LDFLAGS      =
+LDFLAGS       = 
+#LIBFLAGS      = -L/usr/local/lib -lm -lX11 -pthread
+LIBFLAGS      = -L/usr/local/lib -lm -lrt -lX11 -pthread
+DESTDIR	      = $(HOME)/bin
+
+OBJS	      =	csim.o armfile64.o decode.o exec.o alu.o mul.o vxx.o ld.o st.o \
+		reg.o sim-core.o sim-mreq.o sim-mem.o xdisp.o emax6.o 
+
+SRCS	      =	csim.c armfile64.c decode.c exec.c alu.c mul.c vxx.c ld.c st.c \
+		reg.c sim-core.c sim-mreq.c sim-mem.c xdisp.c emax6.c
+
+all:		$(PROGRAM)
+
+$(PROGRAM):     $(OBJS)
+		$(CC) $(LDFLAGS) $(OBJS) -o $(PROGRAM) $(LIBFLAGS)
+
+clean:;		rm -f $(OBJS) core *~
+
+test:;		./$(PROGRAM)       -b5000 ../../sample/test/test000
+
+###
+
+csim.o:		csim.h
+armfile64.o:	csim.h
+decode.o:	csim.h
+exec.o:		csim.h
+alu.o:		csim.h
+mul.o:		csim.h
+vxx.o:		csim.h
+ld.o:		csim.h
+st.o:		csim.h
+reg.o:		csim.h
+sim-core.o:	csim.h
+sim-mreq.o:	csim.h
+sim-mem.o:	csim.h
+xdisp.o:	csim.h
+emax6.o:	../conv-c2c/emax6.h ../conv-c2c/emax6lib.c
+
+###
